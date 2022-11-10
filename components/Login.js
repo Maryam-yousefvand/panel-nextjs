@@ -1,75 +1,118 @@
 import { Box, Button, Flex, Text } from '@chakra-ui/react'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from '../styles/Login.module.css'
 import * as Yup from 'yup'
-import { useAllUserList, useLogin } from '@features/hooks/auth'
+import { useAllUser, useLogin } from '@features/hooks/auth'
+import { useRouter } from 'next/router'
 
 
 const LoginSchema = Yup.object().shape({
-    username: Yup.string().trim().required("نام کاربری الزامی می باشد"),
+    username: Yup.string().trim().email('آدرس ایمیل معتبر نیست').required("نام کاربری الزامی می باشد"),
     password: Yup.string().trim().required("رمز کاربری الزامی می باشد")
 })
 
 
-
-
 const Login = () => {
 
-    // const { data, isError, isLoading } = useAllUserList()
-    // console.log(data)
+    const { data } = useAllUser()
+    const [notUser, setNotUser] = useState()
+    const [notPassword, setNotPassword] = useState()
+    const [user, setUser] = useState()
 
-    const { mutate } = useLogin()
+    const router = useRouter()
+
+    const { mutate, isLoading, isError } = useLogin()
+
+    useEffect(() => {
+        setUser(JSON.parse(localStorage.getItem("user")))
+
+    }, [])
+
 
     return (
-        <Box as='section'>
-            <Flex justify="center" align="center" minH="100vh" >
-                <Flex w="30%" h="100%" justify="center" py="40px" bg='white' rounded='25px'
-                    boxShadow="50px 20px 1000px -10px black">
+        <>
+            {router.reload && user && router.pathname === "/" ? (null) : (
+                <Box as='section' bg="main" >
+                    <Flex justify="center" align="center" minH="100vh" >
+                        <Flex w="30%" h="100%" justify="center" py="40px" bg='white' rounded='25px'
+                            boxShadow="0px 0px 2000px  black">
+                            <Formik
+
+                                initialValues={{
+                                    username: '',
+                                    password: '',
+                                    isLogin: true
+
+                                }}
+                                validationSchema={LoginSchema}
+                                onSubmit={async (values) => {
+                                    const userFilter = data.filter((user) => user.Data.Username === values.username)
+                                    console.log(userFilter)
+                                    if (userFilter.length === 0) {
+                                        setNotUser("نام کاربری موجود نمی باشد")
+
+                                    } else if (userFilter[0].Data.Password !== values.password) {
+                                        setNotPassword("رمز عبور اشتباه می باشد")
+                                    } else {
+                                        mutate({
+                                            username: values.username,
+                                            password: values.password,
+                                            isLogin: values.isLogin
+                                        })
 
 
-                    <Formik
+                                        const user =
+                                        {
+                                            name: userFilter[0].Data.FirstName,
+                                            lname: userFilter[0].Data.LastName,
+                                            username: userFilter[0].Data.Username,
+                                            isLogin: values.isLogin
+                                        }
 
-                        initialValues={{
-                            username: '',
-                            password: ''
-                        }}
-                        validationSchema={LoginSchema}
-                        onSubmit={async (values) => {
-                            mutate({
-                                username: values.username,
-                                password: values.password
-                            })
+                                        localStorage.setItem("user",
+                                            JSON.stringify(user))
 
-                        }}
+                                        router.push("/dashboard")
+                                        router.reload()
 
-                    >
-                        <Form className={styles.form}>
-                            <Flex direction="column" mb="20px" >
-                                <Text as="p" w='100%' my="10px">نام کاربری</Text>
-                                <Field id="username" name="username" placeholder="نام کاربری" className={styles.field} />
-                                <ErrorMessage name="username"
-                                    render={msg => <Text color="red" pt="5px">{msg}</Text>} />
-                            </Flex>
-                            <Flex direction="column" my="20px" >
-                                <Text as="p" my="10px">رمز عبور</Text>
-                                <Field id='password' name="password" placeholder="رمز عبور" className={styles.field} />
-                                <ErrorMessage name="password"
-                                    render={msg => <Text color="red" pt="5px">{msg}</Text>} />
-                            </Flex>
-                            <Button type="submit" my="30px" w="100%" shadow='dark-lg' bg="blue" color="white"
-                                py="10px"
+                                    }
+                                }}
 
-                            >ورود</Button>
+                            >
+                                <Form className={styles.form}>
+                                    <Flex direction="column" mb="30px" >
+                                        <Text as="p" w='100%' my="10px">نام کاربری</Text>
+                                        <Field id="username" name="username" placeholder="نام کاربری" className={styles.field} />
+                                        <ErrorMessage name="username"
+                                            render={msg => <Text color="red" pt="5px">{msg}</Text>} />
 
-                        </Form>
+                                        <Text color="red" pt="5px">{notUser}</Text>
+                                    </Flex>
+                                    <Flex direction="column" my="30px" >
+                                        <Text as="p" my="10px">رمز عبور</Text>
+                                        <Field id='password' name="password" placeholder="رمز عبور" className={styles.field} />
+                                        <ErrorMessage name="password"
+                                            render={msg => <Text color="red" pt="5px">{msg}</Text>} />
+                                        <Text color="red" pt="5px"> {notPassword}</Text>
 
-                    </Formik>
-                </Flex>
+                                    </Flex>
+                                    <Button type="submit" my="40px" w="100%" bg="gray" color="white"
+                                        py="30px" fontSize="1.2rem" _hover={{ bg: "main", color: "gray.600" }}
 
-            </Flex>
+                                    >ورود</Button>
 
-        </Box>
+                                </Form>
+
+                            </Formik>
+                        </Flex>
+
+                    </Flex>
+
+                </Box>
+            )}
+        </>
+
     )
 }
 

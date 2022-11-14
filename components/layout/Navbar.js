@@ -19,19 +19,32 @@ const Navbar = () => {
         <>
             {!user ? (null) : (
                 <Flex minH="100vh" w="12%" justify="start" direction="column" bg="main"
-                    align="center" px="0px" pb="50px" >
+                    align="center" pb="50px" >
 
                     <Flex pb="40px" pt="40px" bg="white" w="95%" justify="center" >
                         <Text px="5px" >{user?.lname}</Text>
                         <Text px="5px">{user?.name}</Text>
 
                     </Flex>
-                    <Flex direction="column" >
-                        <Flex pb="30px" pt="50px">
-                            <Link href="/dashboard" >پروفایل</Link>
+                    <Flex direction="column" w="100%">
+                        <Flex h='70px' my="50px" justify='center' align="center" w="100%"
+                            bg={router.pathname === "/dashboard" ? ("white") : ("")} >
+                            <Link href="/dashboard"
+                                style={{
+                                    width: "100%", display: "flex",
+                                    height: "100%", alignItems: "center", justifyContent: "center"
+                                }}
+                            >پروفایل</Link>
                         </Flex>
-                        <Flex py="30px">
-                            <Link href="/dashboard/user-list" >لیست کاربران</Link>
+                        <Flex h='70px' justify='center' align="center" w="100%"
+                            bg={router.pathname === "/dashboard/user-list" ? ("white") : ("")}
+                        >
+                            <Link href="/dashboard/user-list"
+                                style={{
+                                    width: "100%", display: "flex",
+                                    height: "100%", alignItems: "center", justifyContent: "center"
+                                }}
+                            >لیست کاربران</Link>
                         </Flex>
 
                     </Flex>
@@ -44,7 +57,7 @@ const Navbar = () => {
                         })}
                     >خروج</Button>
 
-                </Flex >
+                </Flex>
             )}
         </>
 

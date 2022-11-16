@@ -1,71 +1,70 @@
 import { List, ListItem, Text } from '@chakra-ui/react'
-import { useUserInformation } from '@features/hooks/auth'
 import React, { useEffect, useState } from 'react'
 
-const GeneralInfo = ({ user }) => {
+const GeneralInfo = ({ user, data, username }) => {
 
     const [userInformation, setUserInformation] = useState()
-    const { data: dataUserInfo } = useUserInformation()
 
-    useEffect(() => {
-
-
-        const userInfo = dataUserInfo?.filter((item) => item?.Data.Username === user)
-        setUserInformation(userInfo)
-
-    }, [dataUserInfo])
 
     return (
         <List display="flex" flexWrap="wrap" h="100%">
             <ListItem display="flex" w="30%" mb="40px" >
+                <Text>نام :</Text>
+                <Text pr="20px">{data?.Data?.FirstName}</Text>
+            </ListItem>
+            <ListItem display="flex" w="30%" mb="40px" >
+                <Text>نام خانوادگی:</Text>
+                <Text pr="20px">{data?.Data?.LastName}</Text>
+            </ListItem>
+            <ListItem display="flex" w="30%" mb="40px" >
                 <Text>نام پدر:</Text>
-                <Text pr="20px">{userInformation?.[0]?.Data?.FatherName}</Text>
+                <Text pr="20px">{data?.Data?.FatherName}</Text>
             </ListItem>
 
             <ListItem display="flex" w="30%">
                 <Text>جنسیت :</Text>
                 <Text pr="20px" >
-                    {`${userInformation?.[0]?.Data?.Gender === 0 ? ("مونث") : ("مذکر")}`}
+                    {`${data?.Data?.Gender === 0 ? ("مونث") : ("مذکر")}`}
                 </Text>
             </ListItem>
 
             <ListItem display="flex" w="30%">
                 <Text>تاریخ تولد :</Text>
-                <Text pr="20px" >{userInformation?.[0]?.Data?.BirthDate}</Text>
+                <Text pr="20px" >{data?.Data?.BirthDate}</Text>
             </ListItem>
             <ListItem display="flex" w="30%" mb="40px">
                 <Text>کد ملی :</Text>
-                <Text pr="20px" >{userInformation?.[0]?.Data?.NationalCode}</Text>
+                <Text pr="20px" >{data?.Data?.NationalCode}</Text>
             </ListItem>
             <ListItem display="flex" w="30%">
                 <Text> شماره تلفن :</Text>
-                <Text pr="20px" >{userInformation?.[0]?.Data?.Phone}</Text>
+                <Text pr="20px" >{data?.Data?.Phone}</Text>
             </ListItem>
             <ListItem display="flex" w="30%">
                 <Text>  کد پستی :</Text>
-                <Text pr="20px" >{userInformation?.[0]?.Data?.PostalCode}</Text>
+                <Text pr="20px" >{data?.Data?.PostalCode}</Text>
             </ListItem>
             <ListItem display="flex" w="30%" mb="40px" >
                 <Text>   آدرس :</Text>
-                <Text pr="20px" >{userInformation?.[0]?.Data?.Address}</Text>
+                <Text pr="20px" >{data?.Address}</Text>
             </ListItem>
             <ListItem display="flex" w="30%" >
                 <Text>   وضعیت :</Text>
                 <Text pr="20px" >
-                    {`${userInformation?.[0]?.Data?.Status === 0 ? ("غیرفعال") : ("فعال")}`}
+                    {`${data?.Data?.Status}`}
                 </Text>
             </ListItem>
             <ListItem display="flex" w="30%" >
                 <Text>   وضعیت ایمیل :</Text>
                 <Text pr="20px" >
-                    {`${userInformation?.[0]?.Data?.EmailConfirmed ?
+                    {`${data?.Data?.EmailConfirmed ?
                         ("تایید شده") : ("تایید نشده")}`}
                 </Text>
             </ListItem>
             <ListItem display="flex" w="30%">
                 <Text>   وضعیت شماره تلفن :</Text>
                 <Text pr="20px" >
-                    {`${userInformation?.[0]?.Data?.PhoneNumberConfirmed ?
+                    {`${data?.Data?.PhoneNumberConfirmed ?
                         ("تایید شده") : ("تایید نشده")}`}
                 </Text>
             </ListItem>

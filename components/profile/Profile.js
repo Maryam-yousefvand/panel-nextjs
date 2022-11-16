@@ -7,22 +7,17 @@ import GeneralInfo from './GeneralInfo'
 const Profile = () => {
 
     const [user, setUser] = useState([])
-    const [dataUserSummery, setdataUserSummery] = useState()
-    const { data } = useUserSummary()
-    const userLogin = JSON.parse(localStorage.getItem("user"))
+    const { data: dataUserSummery } = useUserSummary()
+
     const [generalInfo, setGeneralInfo] = useState(false)
     const [cards, setCards] = useState(false)
 
+    const { data: dataUserInfo } = useUserInformation()
+    const { data: userBankInfo } = useUserBankInfo()
+
     useEffect(() => {
 
-        console.log(userLogin)
-        setUser(userLogin?.username)
-        console.log(user)
-        const userSummary = data?.filter((item) => item?.Data?.Username === user)
-        setdataUserSummery(userSummary)
-        console.log(userSummary)
-
-    }, [data, user])
+    }, [])
 
     return (
 
@@ -33,20 +28,20 @@ const Profile = () => {
                 <List display="flex" flexWrap="wrap" h="100%"  >
                     <ListItem display="flex" w="30%" mb="40px" >
                         <Text>نام:</Text>
-                        <Text pr="20px" >{dataUserSummery?.[0]?.Data?.FirstName}</Text>
+                        <Text pr="20px" >{dataUserSummery?.Data?.FirstName}</Text>
                     </ListItem>
 
                     <ListItem display="flex" w="30%">
                         <Text>نام خانوادگی:</Text>
-                        <Text pr="20px" >{dataUserSummery?.[0]?.Data?.LastName}</Text>
+                        <Text pr="20px" >{dataUserSummery?.Data?.LastName}</Text>
                     </ListItem>
                     <ListItem display="flex" w="30%">
                         <Text>ایمیل :</Text>
-                        <Text pr="20px" >{dataUserSummery?.[0]?.Data?.Email}</Text>
+                        <Text pr="20px" >{dataUserSummery?.Data?.Email}</Text>
                     </ListItem>
                     <ListItem display="flex" w="30%">
                         <Text>موبایل :</Text>
-                        <Text pr="20px" >{dataUserSummery?.[0]?.Data?.Mobile}</Text>
+                        <Text pr="20px" >{dataUserSummery?.Data?.Mobile}</Text>
                     </ListItem>
                 </List>
             </Box>
@@ -61,7 +56,7 @@ const Profile = () => {
                 >اطلاعات کلی</Button>
                 {generalInfo ? (
                     <Box minH="200px" w="80%" py="30px" px="30px" bg="main">
-                        <GeneralInfo user={user} />
+                        <GeneralInfo user={user} data={dataUserInfo} />
                     </Box>
                 ) : (null)}
 
@@ -70,7 +65,7 @@ const Profile = () => {
                     onClick={() => setCards(!cards)}
                 > لیست کارت ها</Button>
                 {cards ? (
-                    <CardList user={user} />
+                    <CardList user={user} data={userBankInfo} />
                 ) : (null)}
 
             </Box>

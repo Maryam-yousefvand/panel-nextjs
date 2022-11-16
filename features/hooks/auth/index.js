@@ -1,11 +1,19 @@
 
-import { getAllUser, getUserBankInfo, getUserInformation, getUserSummary, login, signOut } from "@features/api/auth";
+import {
+    getAdminUserBankInfo, getAllUser, getUserBankInfo,
+    getUserInformation, getUserProfile, getUserSummary, login,
+    logOut
+} from "@features/api/auth";
 
 import { useMutation, useQuery } from "react-query";
 import { toast } from "react-toastify";
 
 export const useAllUser = () => {
-    return useQuery(['userList'], getAllUser)
+    return useMutation(getAllUser, {
+        onSuccess: () => {
+            // alert("ok")
+        }
+    })
 }
 
 export const useLogin = () => {
@@ -16,16 +24,13 @@ export const useLogin = () => {
     })
 }
 
-export const useSignOut = () => {
-    return useMutation(signOut, {
-        onSuccess: ({ }) => {
-            // toast.success("باموفقیت خارج شدید")
-            localStorage.removeItem("user")
-            window.location.pathname = "/"
-        }
-    })
+export const useLogOut = () => {
+    return useQuery(['logOut'], logOut)
 }
 
+export const useUserProfile = queryKey => {
+    return useQuery(['userProfile', queryKey], getUserProfile)
+}
 
 export const useUserSummary = () => {
     return useQuery(['userSummary'], getUserSummary)
@@ -37,5 +42,9 @@ export const useUserBankInfo = () => {
 
 export const useUserInformation = () => {
     return useQuery(['userInformation'], getUserInformation)
+}
+
+export const useAdminUserBankInfo = queryKey => {
+    return useQuery(['adminUserBankInfo', queryKey], getAdminUserBankInfo)
 }
 

@@ -8,38 +8,22 @@ import 'react-toastify/dist/ReactToastify.css';
 import Layout from '@components/layout/Layout'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter()
 
-  const [isLogin, setIsLogin] = useState()
-  console.log(isLogin)
 
-  if (router.pathname === "/" && isLogin?.isLogin) {
-    router.push('/dashboard')
-  }
-  if (router.reload && router.pathname === "/" && isLogin?.isLogin) {
-    router.push('/dashboard')
-  }
-
-
-  useEffect(() => {
-    setIsLogin(JSON.parse(localStorage.getItem("user")))
-
-  }, [])
-
-  if (router.pathname.startsWith('/dashboard') && isLogin) {
+  if (router.pathname.startsWith('/dashboard')) {
     return (
       <ChakraProvider theme={theme}>
         <ToastContainer />
-
         <QueryClientProvider client={queryClient} >
           <Layout>
             <Component {...pageProps} />
           </Layout>
         </QueryClientProvider>
       </ChakraProvider>
-
 
     )
   }
@@ -48,11 +32,8 @@ function MyApp({ Component, pageProps }) {
 
     <ChakraProvider theme={theme}>
       <ToastContainer />
-
       <QueryClientProvider client={queryClient} >
-
         <Component {...pageProps} />
-
       </QueryClientProvider>
     </ChakraProvider>
 
